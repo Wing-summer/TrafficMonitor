@@ -622,25 +622,29 @@ void CTrafficMonitorDlg::BackupHistoryTrafficFile()
 
 void CTrafficMonitorDlg::_OnOptions(int tab)
 {
-    COptionsDlg optionsDlg(tab);
 
-    //将选项设置数据传递给选项设置对话框
-    optionsDlg.m_tab1_dlg.m_data = theApp.m_main_wnd_data;
-    optionsDlg.m_tab2_dlg.m_data = theApp.m_taskbar_data;
-    optionsDlg.m_tab3_dlg.m_data = theApp.m_general_data;
-    optionsDlg.m_tab1_dlg.m_text_disable = m_skin.GetLayoutInfo().no_label;
+start:
 
-    if (optionsDlg.DoModal() == IDOK)
+    COptionsDlg* optionsDlg =new COptionsDlg(tab);
+
+	//将选项设置数据传递给选项设置对话框
+	optionsDlg->m_tab1_dlg.m_data = theApp.m_main_wnd_data;
+	optionsDlg->m_tab2_dlg.m_data = theApp.m_taskbar_data;
+	optionsDlg->m_tab3_dlg.m_data = theApp.m_general_data;
+	optionsDlg->m_tab1_dlg.m_text_disable = m_skin.GetLayoutInfo().no_label;
+
+    auto res = optionsDlg->DoModal();
+    if (  res != IDCANCEL)
     {
-        bool is_hardware_monitor_item_changed = (optionsDlg.m_tab3_dlg.m_data.hardware_monitor_item != theApp.m_general_data.hardware_monitor_item);
-        bool is_always_on_top_changed = (optionsDlg.m_tab1_dlg.m_data.m_always_on_top != theApp.m_main_wnd_data.m_always_on_top);
-        bool is_mouse_penerate_changed = (optionsDlg.m_tab1_dlg.m_data.m_mouse_penetrate != theApp.m_main_wnd_data.m_mouse_penetrate);
-        bool is_alow_out_of_border_changed = (optionsDlg.m_tab1_dlg.m_data.m_alow_out_of_border != theApp.m_main_wnd_data.m_alow_out_of_border);
-        bool is_show_notify_icon_changed = (optionsDlg.m_tab3_dlg.m_data.show_notify_icon != theApp.m_general_data.show_notify_icon);
+        bool is_hardware_monitor_item_changed = (optionsDlg->m_tab3_dlg.m_data.hardware_monitor_item != theApp.m_general_data.hardware_monitor_item);
+        bool is_always_on_top_changed = (optionsDlg->m_tab1_dlg.m_data.m_always_on_top != theApp.m_main_wnd_data.m_always_on_top);
+        bool is_mouse_penerate_changed = (optionsDlg->m_tab1_dlg.m_data.m_mouse_penetrate != theApp.m_main_wnd_data.m_mouse_penetrate);
+        bool is_alow_out_of_border_changed = (optionsDlg->m_tab1_dlg.m_data.m_alow_out_of_border != theApp.m_main_wnd_data.m_alow_out_of_border);
+        bool is_show_notify_icon_changed = (optionsDlg->m_tab3_dlg.m_data.show_notify_icon != theApp.m_general_data.show_notify_icon);
 
-        theApp.m_main_wnd_data = optionsDlg.m_tab1_dlg.m_data;
-        theApp.m_taskbar_data = optionsDlg.m_tab2_dlg.m_data;
-        theApp.m_general_data = optionsDlg.m_tab3_dlg.m_data;
+        theApp.m_main_wnd_data =optionsDlg->m_tab1_dlg.m_data;
+        theApp.m_taskbar_data =optionsDlg->m_tab2_dlg.m_data;
+        theApp.m_general_data =optionsDlg->m_tab3_dlg.m_data;
 
         CGeneralSettingsDlg::CheckTaskbarDisplayItem();
 
@@ -655,13 +659,13 @@ void CTrafficMonitorDlg::_OnOptions(int tab)
             OpenTaskBarWnd();
         }
 
-        if (optionsDlg.m_tab3_dlg.IsAutoRunModified())
+        if (optionsDlg->m_tab3_dlg.IsAutoRunModified())
             theApp.SetAutoRun(theApp.m_general_data.auto_run);
 
-        if (optionsDlg.m_tab3_dlg.IsShowAllInterfaceModified())
+        if (optionsDlg->m_tab3_dlg.IsShowAllInterfaceModified())
             IniConnection();
 
-        if (optionsDlg.m_tab3_dlg.IsMonitorTimeSpanModified())      //如果监控时间间隔改变了，则重设定时器
+        if (optionsDlg->m_tab3_dlg.IsMonitorTimeSpanModified())      //如果监控时间间隔改变了，则重设定时器
         {
             KillTimer(MONITOR_TIMER);
             SetTimer(MONITOR_TIMER, theApp.m_general_data.monitor_time_span, NULL);
@@ -727,6 +731,14 @@ void CTrafficMonitorDlg::_OnOptions(int tab)
 
         theApp.SaveConfig();
         theApp.SaveGlobalConfig();
+
+        tab = optionsDlg->StartTab;
+        delete optionsDlg; 
+    }
+    
+    if (res==IDYES)
+    {
+        goto start;
     }
 }
 

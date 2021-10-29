@@ -35,6 +35,7 @@ void COptionsDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(COptionsDlg, CBaseDialog)
     ON_WM_SIZE()
+    ON_BN_CLICKED(IDApply, &COptionsDlg::OnApply)
 END_MESSAGE_MAP()
 
 
@@ -124,4 +125,15 @@ void COptionsDlg::OnCancel()
     m_tab3_dlg.OnCancel();
 
     CBaseDialog::OnCancel();
+}
+
+
+void COptionsDlg::OnApply()
+{
+    // TODO: 在此添加控件通知处理程序代码
+    StartTab = m_tab_selected;
+    m_tab1_dlg.OnOK();
+    m_tab2_dlg.OnOK();
+    m_tab3_dlg.OnOK();
+    EndDialog(IDYES);
 }

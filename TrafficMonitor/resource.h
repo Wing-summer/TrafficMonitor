@@ -2,6 +2,7 @@
 // Microsoft Visual C++ 生成的包含文件。
 // 供 TrafficMonitor.rc 使用
 //
+#define IDApply                         4
 #define IDD_TRAFFICMONITOR_DIALOG       102
 #define IDR_MAINFRAME                   128
 #define IDR_MENU1                       130

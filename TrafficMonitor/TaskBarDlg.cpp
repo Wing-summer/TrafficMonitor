@@ -468,7 +468,7 @@ bool CTaskBarDlg::AdjustWindowPos()
             {
                 if (theApp.m_win_version.IsWindows11OrLater()) {  //Win11兼容
                     if (!theApp.m_taskbar_data.tbar_wnd_snap) {
-                        m_left_space = 0;   //显示在最左侧
+                        m_left_space = theApp.DPI(10);   //显示在左侧的一个偏移处，否则挺别扭难看的
                     }
                     else
                     {
